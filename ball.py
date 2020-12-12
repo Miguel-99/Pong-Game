@@ -1,16 +1,20 @@
 import pygame as pg
 import random
 
+
 class Ball():
-    def __init__(self, fichero_imagen, width, height):
+    """
+    Pelota que rebota en la pantalla, es golpeada por las raquetas y al sobrepasar el eje x en su 
+    limite minimo y maximo anota un punto para un jugador, luego reaparece en el centro
+    """
+    def __init__(self, path_file, width, height):
 
         # Dimension del ancho y alto de la pantalla
         self.SCR_WIDTH = width
         self.SCR_HEIGHT = height
 
-        self.sheet = pg.image.load("assets/ball.png").convert_alpha() # Imagen cargada
-        self.image = self.sheet.subsurface(self.sheet.get_clip()) # dimension del recorte: ancho y alto
-         
+        self.image = pg.image.load(path_file).convert_alpha() # Imagen cargada
+
         # Dimensiones de la Pelota
         self.width, self.height = self.image.get_size()
         
@@ -29,9 +33,10 @@ class Ball():
         self.x += self.dir_x
         self.y += self.dir_y
 
-    def bounce(self):
+    def bounce(self, scoreboard):
         """
-        when ball reaches the screen's limits, bounce or reset (start from the cencter again)
+        cuando la pelota alcanza el limite de la pantalla, rebota o se resetea (desde el centro otra vez)
+        cuando esto sucede, aumenta 1 punto en el scoreboard para el jugador que anotó
         """
         if self.y <= 0:
             self.dir_y = -self.dir_y
@@ -39,12 +44,19 @@ class Ball():
         if self.y+self.height >= self.SCR_HEIGHT:
             self.dir_y = -self.dir_y
 
-        if self.x <= 0:
+        if self.x +self.width<= 0:
+            scoreboard.punct_rightPlayer += 1
             self.reset()
+            
         
-        if self.x+self.width >= self.SCR_WIDTH:
+        if self.x>= self.SCR_WIDTH:
+            scoreboard.punct_leftPlayer += 1
             self.reset()
+            
     def reset(self):
+        """
+        devuelve la pelota al centrode la pantalla
+        """
 
         self.x = (self.SCR_WIDTH/2) - (self.width/2)
         self.y = (self.SCR_HEIGHT/2) - (self.height/2)
