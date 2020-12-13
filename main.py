@@ -1,3 +1,5 @@
+# Credits: assets from DeathsbreedGames organization (http://deathsbreedgames.github.io/)
+
 import pygame as pg
 from pygame.locals import QUIT
 from ball import Ball
